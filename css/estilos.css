@@ -1,0 +1,188 @@
+/* =====================================================================
+   YourShop · Laboratorio de Seguridad Web — estilos
+   Mantiene la identidad del YourShop original (crema + dorado) y añade
+   los elementos del laboratorio: banner de versión, paneles de código,
+   semáforos y tablas.
+   ===================================================================== */
+:root {
+  --bg: #F3EFE8;          /* fondo cálido suave */
+  --ink: #14110E;
+  --gold: #B08D3B;
+  --gold-dark: #967730;
+  --surface: #FBFAF7;     /* secciones: casi blanco cálido, flotan con sombra */
+  --card: #F1ECE3;        /* tarjetas: un tono apenas más cálido */
+  --borde: rgba(20,17,14,.07);
+  --sombra: 0 8px 26px -16px rgba(20,17,14,.30);
+  --rojo: #C0392B;
+  --verde: #1E8E55;
+  --code-bg: #0c0f24;
+  --code-ink: #e7e9f5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  background-color: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+body.modo-oscuro { background-color: #14110E; color: #F7F5F1; }
+body.modo-oscuro header { background-color: #211C17; }
+body.modo-oscuro #Catalogo article { background-color: #2A241E; }
+body.modo-oscuro section.bloque { background-color: #211C17; color: #F7F5F1; border-color: rgba(255,255,255,.06); }
+
+h1, h2, h3 { line-height: 1.15; }
+code, .mono { font-family: "JetBrains Mono", ui-monospace, "Consolas", monospace; }
+a { color: var(--gold-dark); }
+
+/* ---------- Header ---------- */
+header { background-color: #EFEAE1; padding: 14px 18px; border-bottom: 1px solid var(--borde); }
+body.modo-oscuro header { border-bottom-color: rgba(255,255,255,.06); }
+.header-top {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  max-width: 1000px; margin: 0 auto;
+}
+.header-top .marca { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.header-top h1 { font-size: 28px; margin: 0; }
+
+/* Etiqueta discreta de versión (reemplaza al banner) */
+.version-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 600; padding: 4px 11px; border-radius: 100px;
+  border: 1px solid var(--borde);
+}
+.version-chip .pt { width: 9px; height: 9px; border-radius: 50%; }
+.version-chip.insegura { color: var(--rojo); background: rgba(192,57,43,.08); }
+.version-chip.insegura .pt { background: var(--rojo); }
+.version-chip.segura { color: var(--verde); background: rgba(30,142,85,.10); }
+.version-chip.segura .pt { background: var(--verde); }
+
+/* ---------- Índice de ataques ---------- */
+.indice-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px; margin-top: 16px;
+}
+.indice-item {
+  display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
+  background: var(--card); border: 1px solid var(--borde); border-radius: 12px;
+  padding: 13px 15px; transition: transform .12s, box-shadow .12s;
+}
+.indice-item:hover { transform: translateY(-2px); box-shadow: var(--sombra); }
+.indice-item .num {
+  flex: none; width: 30px; height: 30px; border-radius: 9px;
+  background: var(--gold); color: #fff; font-weight: 700;
+  display: grid; place-items: center;
+}
+.indice-item b { display: block; font-size: 15px; }
+.indice-item small { color: #6a6256; font-size: 12px; }
+body.modo-oscuro .indice-item { background: #2A241E; }
+body.modo-oscuro .indice-item small { color: #c7bfb2; }
+
+button {
+  font-size: 15px; padding: 9px 14px; border: none; border-radius: 8px;
+  background-color: var(--gold); color: #fff; cursor: pointer;
+}
+button:hover { background-color: var(--gold-dark); }
+button.sec { background: transparent; color: var(--gold-dark); border: 1px solid var(--gold); }
+
+/* ---------- Layout de secciones ---------- */
+main { max-width: 1000px; margin: 0 auto; padding: 0 20px 60px; }
+section.bloque {
+  background: var(--surface); border: 1px solid var(--borde); border-radius: 18px;
+  padding: 24px; margin-top: 24px; box-shadow: var(--sombra);
+}
+section.bloque > h2 { margin: 0 0 4px; font-size: 22px; }
+section.bloque > p.intro { margin: 0 0 16px; color: #5a5349; max-width: 70ch; }
+body.modo-oscuro section.bloque > p.intro { color: #c7bfb2; }
+.ataque-chip {
+  display: inline-block; font-size: 12px; font-weight: 700; border-radius: 20px;
+  padding: 3px 11px; margin-bottom: 10px; background: rgba(176,141,59,.18); color: var(--gold-dark);
+}
+
+/* ---------- Formularios del laboratorio ---------- */
+.fila { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.campo { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.campo label { font-size: 13px; font-weight: 600; }
+input[type=text], input[type=password], select, textarea {
+  font: inherit; padding: 9px 11px; border: 1px solid #cbc4b8; border-radius: 8px;
+  background: #fff; color: #14110E; min-width: 220px;
+}
+textarea { min-height: 70px; resize: vertical; width: 100%; }
+.botones-ataque { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.botones-ataque button { font-size: 12.5px; padding: 6px 11px; background: #efe8d8; color: var(--gold-dark); border: 1px solid var(--gold); }
+.botones-ataque button:hover { background: #e6dcc4; }
+
+/* ---------- Panel de consulta SQL ---------- */
+.panel-sql {
+  margin-top: 14px; border-radius: 10px; overflow: hidden; border: 1px solid #2a2a38;
+  background: var(--code-bg);
+}
+.panel-sql .cab {
+  background: #141830; color: #8a90b8; font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px; padding: 7px 12px; border-bottom: 1px solid #2a2a38;
+}
+.panel-sql .sql {
+  margin: 0; padding: 12px 14px; color: var(--code-ink);
+  font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word;
+}
+
+/* ---------- Semáforo ---------- */
+.semaforo { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13.5px; font-weight: 600; }
+.dot { width: 13px; height: 13px; border-radius: 50%; background: #b9b2a5; }
+.dot.rojo { background: var(--rojo); box-shadow: 0 0 0 4px rgba(192,57,43,.2); }
+.dot.verde { background: var(--verde); box-shadow: 0 0 0 4px rgba(30,142,85,.2); }
+.dot.neutro { background: #b9b2a5; }
+
+/* ---------- Resultados ---------- */
+.resultado { margin-top: 12px; padding: 11px 14px; border-radius: 10px; font-size: 14.5px; }
+.resultado.ok { background: rgba(30,142,85,.12); }
+.resultado.malo { background: rgba(192,57,43,.12); }
+.resultado.neutro { background: rgba(0,0,0,.05); }
+body.modo-oscuro .resultado.neutro { background: rgba(255,255,255,.07); }
+
+/* ---------- Catálogo ---------- */
+#Catalogo {
+  display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 16px;
+}
+@media (min-width: 720px) { #Catalogo { grid-template-columns: 1fr 1fr 1fr; } }
+#Catalogo article {
+  background: var(--card); border: 1px solid var(--borde); border-radius: 14px;
+  padding: 14px; box-shadow: 0 3px 12px -8px rgba(20,17,14,.22);
+}
+#Catalogo img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
+.Nombre-Producto { font-size: 16px; margin: 10px 0 6px; }
+.Precio { color: var(--gold); font-weight: bold; font-size: 17px; }
+.aviso-vacio { color: #6a6256; padding: 10px 0; }
+.aviso-error { background: rgba(192,57,43,.1); border-radius: 10px; padding: 12px 14px; color: var(--rojo); }
+.aviso-error code { color: var(--rojo); word-break: break-all; }
+
+/* ---------- Tablas (fuga + base de datos) ---------- */
+.tabla-fuga, .tabla-db {
+  width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13.5px;
+  background: #fff; border-radius: 8px; overflow: hidden;
+}
+body.modo-oscuro .tabla-fuga, body.modo-oscuro .tabla-db { background: #2b2620; }
+.tabla-fuga th, .tabla-db th { background: var(--ink); color: #fff; text-align: left; padding: 8px 10px; font-family: monospace; }
+.tabla-fuga td, .tabla-db td { padding: 8px 10px; border-top: 1px solid #e4ddce; font-family: monospace; word-break: break-all; }
+.tabla-fuga td { color: var(--rojo); font-weight: 600; }
+.celda-peligro { color: var(--rojo); font-weight: 700; }
+.celda-ok { color: var(--verde); font-weight: 600; }
+
+/* ---------- Reseñas ---------- */
+.resena { padding: 9px 0; border-bottom: 1px solid #d9d2c4; }
+body.modo-oscuro .resena { border-color: #3a342c; }
+.resena:last-child { border-bottom: none; }
+
+/* ---------- Varios ---------- */
+#estado-carga {
+  max-width: 1000px; margin: 20px auto; padding: 14px 18px; border-radius: 10px;
+  background: var(--surface); font-size: 14px;
+}
+.nota-fix {
+  margin-top: 14px; border-left: 3px solid var(--verde); background: rgba(30,142,85,.08);
+  border-radius: 0 10px 10px 0; padding: 11px 15px; font-size: 13.5px;
+}
+body.modo-inseguro .nota-fix { border-left-color: var(--rojo); background: rgba(192,57,43,.08); }
+footer { text-align: center; padding: 30px 20px; color: #6a6256; font-size: 13px; }

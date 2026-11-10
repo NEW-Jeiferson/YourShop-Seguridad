@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YourShop — VERSIÓN SEGURA</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="marca">
+      <h1>Your Shop</h1>
+      <span class="version-chip segura"><span class="pt"></span> Versión segura</span>
+    </div>
+    <button id="btn-modo" class="sec">Cambiar modo</button>
+  </div>
+</header>
+
+<div id="estado-carga">Iniciando la base de datos (SQLite en el navegador)…</div>
+
+<main>
+
+  <!-- ÍNDICE DE ATAQUES -->
+  <section class="bloque indice">
+    <h2>Laboratorio de seguridad · 4 ataques en vivo</h2>
+    <p class="intro">Esta es la versión <b>segura</b> de YourShop. Abre también
+      <a href="inseguro.html">la versión insegura</a> en otra pestaña y haz los mismos
+      ataques en las dos para comparar cómo responde cada una.</p>
+    <div class="indice-grid">
+      <a class="indice-item" href="#sec-login"><span class="num">1</span>
+        <div><b>Login</b><small>Inyección SQL para entrar sin contraseña</small></div></a>
+      <a class="indice-item" href="#sec-buscar"><span class="num">2</span>
+        <div><b>Buscador</b><small>Inyección SQL (UNION) para robar usuarios</small></div></a>
+      <a class="indice-item" href="#sec-resenas"><span class="num">3</span>
+        <div><b>Reseñas</b><small>XSS: código que se ejecuta en el navegador</small></div></a>
+      <a class="indice-item" href="#sec-registro"><span class="num">4</span>
+        <div><b>Contraseñas</b><small>Texto plano vs. hash con bcrypt</small></div></a>
+    </div>
+  </section>
+
+  <!-- 1 · LOGIN -->
+  <section class="bloque" id="sec-login">
+    <span class="ataque-chip">Ataque 1 · Inyección SQL — saltar el login</span>
+    <h2>Mi cuenta</h2>
+    <p class="intro">Inicia sesión. Con credenciales reales: <code>admin</code> / <code>Admin2026!</code>. Luego prueba el ataque: deja el usuario en <code>admin</code> y escribe en la contraseña <code>' OR '1'='1</code>.</p>
+    <form id="form-login">
+      <div class="campo"><label for="login-usuario">Usuario</label>
+        <input type="text" id="login-usuario" value="admin"></div>
+      <div class="campo"><label for="login-clave">Contraseña</label>
+        <input type="text" id="login-clave" placeholder="contraseña"></div>
+      <div class="botones-ataque">
+        <button type="button" data-fill="#login-clave" data-valor="Admin2026!">Clave correcta</button>
+        <button type="button" data-fill="#login-clave" data-valor="' OR '1'='1">Payload de ataque</button>
+      </div>
+      <button type="submit">Iniciar sesión</button>
+    </form>
+    <div class="semaforo"><span class="dot neutro" data-dot="login"></span><span data-estado="login">En espera</span></div>
+    <div class="panel-sql" id="panel-login" hidden>
+      <div class="cab">Consulta SQL que se ejecutó</div>
+      <pre class="sql"></pre>
+    </div>
+    <div id="login-resultado" class="resultado neutro" style="display:block"></div>
+    <div class="nota-fix">
+      <b>El código:</b> la versión insegura pega el texto en la consulta
+      (<code>... WHERE usuario='" + usuario + "'</code>). La segura usa un parámetro
+      (<code>... WHERE usuario = ?</code>) y compara la clave con <code>bcrypt</code>.
+    </div>
+  </section>
+
+  <!-- 2 · BUSCADOR + CATÁLOGO -->
+  <section class="bloque" id="sec-buscar">
+    <span class="ataque-chip">Ataque 2 · Inyección SQL — fuga de datos (UNION)</span>
+    <h2>Catálogo</h2>
+    <p class="intro">El buscador arma una consulta SQL con lo que escribes. Prueba una búsqueda normal (<code>vestido</code>) y luego el ataque UNION, que hace que el buscador devuelva la tabla de usuarios en vez de productos.</p>
+    <form id="form-buscar" class="fila">
+      <input type="text" id="input-buscar" placeholder="Buscar producto…">
+      <button type="submit">Buscar</button>
+      <button type="button" id="btn-limpiar" class="sec">Limpiar</button>
+    </form>
+    <div class="botones-ataque">
+      <button type="button" data-fill="#input-buscar" data-valor="vestido">Búsqueda normal</button>
+      <button type="button" data-fill="#input-buscar" data-valor="' UNION SELECT usuario, clave FROM usuarios -- ">Payload UNION (robar usuarios)</button>
+    </div>
+    <div class="semaforo"><span class="dot neutro" data-dot="buscar"></span><span data-estado="buscar">En espera</span></div>
+    <div class="panel-sql" id="panel-buscar" hidden>
+      <div class="cab">Consulta SQL que se ejecutó</div>
+      <pre class="sql"></pre>
+    </div>
+    <div id="Catalogo"></div>
+  </section>
+
+  <!-- 3 · RESEÑAS (XSS) -->
+  <section class="bloque" id="sec-resenas">
+    <span class="ataque-chip">Ataque 3 · XSS — código en una reseña</span>
+    <h2>Reseñas de productos</h2>
+    <p class="intro">Deja una reseña. Una reseña normal se ve bien. Pero prueba a publicar el payload XSS: se ejecuta como código en el navegador de cualquiera que lo lea.</p>
+    <form id="form-resena">
+      <div class="campo"><label for="resena-producto">Producto</label>
+        <select id="resena-producto"></select></div>
+      <div class="campo"><label for="resena-autor">Tu nombre</label>
+        <input type="text" id="resena-autor" value="Visitante"></div>
+      <div class="campo"><label for="resena-texto">Comentario</label>
+        <textarea id="resena-texto" placeholder="Escribe tu reseña…"></textarea></div>
+      <div class="botones-ataque">
+        <button type="button" data-fill="#resena-texto" data-valor="Muy buen producto, lo recomiendo.">Reseña normal</button>
+        <button type="button" data-fill="#resena-texto" data-valor="&lt;img src=x onerror=&quot;document.getElementById('zona-xss').textContent='⚠ XSS EJECUTADO: este código corrió solo'&quot;&gt;">Payload XSS</button>
+      </div>
+      <button type="submit">Publicar reseña</button>
+    </form>
+    <div class="semaforo"><span class="dot neutro" data-dot="xss"></span><span data-estado="xss">En espera</span></div>
+    <div id="zona-xss" style="margin-top:12px;font-weight:700"></div>
+    <div id="lista-resenas" style="margin-top:12px"></div>
+    <div class="nota-fix">
+      <b>El código:</b> la insegura pinta el comentario con <code>innerHTML</code> (lo interpreta como HTML).
+      La segura usa <code>textContent</code> (lo muestra como texto) y añade una cabecera <code>CSP</code>.
+    </div>
+  </section>
+
+  <!-- 4 · REGISTRO + ESPIAR BD -->
+  <section class="bloque" id="sec-registro">
+    <span class="ataque-chip">4 · Contraseñas — texto plano vs. hash</span>
+    <h2>Crear cuenta</h2>
+    <p class="intro">Registra un usuario y luego pulsa “Espiar la base de datos” para ver cómo quedó guardada su contraseña. En esta versión se guarda tal cual; en la segura, hasheada con bcrypt.</p>
+    <form id="form-registro">
+      <div class="campo"><label for="reg-usuario">Usuario</label>
+        <input type="text" id="reg-usuario" placeholder="nuevo_usuario"></div>
+      <div class="campo"><label for="reg-clave">Contraseña</label>
+        <input type="text" id="reg-clave" placeholder="una clave"></div>
+      <button type="submit">Registrarme</button>
+    </form>
+    <div id="reg-resultado" class="resultado neutro" style="margin-top:10px"></div>
+    <div class="panel-sql" id="panel-registro" hidden>
+      <div class="cab">Consulta SQL que se ejecutó</div>
+      <pre class="sql"></pre>
+    </div>
+    <p style="margin-top:16px"><button type="button" id="btn-espiar">🔍 Espiar la base de datos (tabla usuarios)</button></p>
+    <div id="tabla-usuarios" hidden></div>
+    <div class="nota-fix">
+      <b>El código:</b> la insegura guarda la clave en la columna <code>clave</code> en texto plano.
+      La segura guarda <code>bcrypt.hashSync(clave, 10)</code> en <code>clave_hash</code> y deja la clave real en blanco.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Tecnología de Internet II · ISW-312 · UCE — Laboratorio de seguridad web.
+  Todo corre local en tu navegador con datos inventados. La versión insegura NO debe subirse a internet.
+</footer>
+
+<script src="js/lib/sql-wasm.js"></script>
+<script src="js/lib/sql-wasm-bin.js"></script>
+<script src="js/lib/bcrypt.min.js"></script>
+<script src="js/db.js"></script>
+<script src="js/servidor-seguro.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
