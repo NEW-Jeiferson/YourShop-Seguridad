@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YourShop — Laboratorio de Seguridad Web</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    .portada { max-width: 900px; margin: 0 auto; padding: 60px 22px; }
+    .portada h1 { font-size: clamp(30px, 6vw, 52px); margin: 0 0 10px; }
+    .portada .sub { color: #6a6256; font-size: 18px; max-width: 60ch; margin: 0 0 32px; }
+    body.modo-oscuro .portada .sub { color: #c7bfb2; }
+    .opciones { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 10px; }
+    @media (min-width: 680px) { .opciones { grid-template-columns: 1fr 1fr; } }
+    .opcion {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--surface); border: 1px solid var(--borde); border-radius: 18px;
+      padding: 24px; box-shadow: var(--sombra); transition: transform .14s, box-shadow .14s;
+    }
+    .opcion:hover { transform: translateY(-3px); }
+    body.modo-oscuro .opcion { background: #211C17; }
+    .opcion .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 100px; margin-bottom: 12px;
+    }
+    .opcion .tag .pt { width: 10px; height: 10px; border-radius: 50%; }
+    .opcion.ins .tag { color: var(--rojo); background: rgba(192,57,43,.1); }
+    .opcion.ins .tag .pt { background: var(--rojo); }
+    .opcion.seg .tag { color: var(--verde); background: rgba(30,142,85,.12); }
+    .opcion.seg .tag .pt { background: var(--verde); }
+    .opcion h2 { margin: 0 0 6px; font-size: 22px; }
+    .opcion p { margin: 0; color: #6a6256; font-size: 14.5px; }
+    body.modo-oscuro .opcion p { color: #c7bfb2; }
+    .opcion .ir { margin-top: 14px; font-weight: 700; color: var(--gold-dark); }
+    .nota-inicio {
+      margin-top: 28px; border-left: 3px solid var(--gold); background: rgba(176,141,59,.08);
+      border-radius: 0 12px 12px 0; padding: 14px 17px; font-size: 14px; color: #5a5349; max-width: 70ch;
+    }
+    body.modo-oscuro .nota-inicio { color: #c7bfb2; }
+    .barra-top { background: #EFEAE1; border-bottom: 1px solid var(--borde); padding: 14px 18px; }
+    body.modo-oscuro .barra-top { background: #211C17; }
+    .barra-top .in { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .barra-top h3 { margin: 0; font-size: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="barra-top">
+  <div class="in">
+    <h3>Your Shop</h3>
+    <button id="btn-modo" class="sec">Cambiar modo</button>
+  </div>
+</div>
+
+<main class="portada">
+  <h1>Laboratorio de Seguridad Web</h1>
+  <p class="sub">La misma tienda, en dos versiones idénticas por fuera pero distintas por dentro.
+    Haz los mismos ataques en las dos y compara cómo responde cada una.</p>
+
+  <div class="opciones">
+    <a class="opcion ins" href="inseguro.html">
+      <span class="tag"><span class="pt"></span> Versión insegura</span>
+      <h2>Sin medidas de seguridad</h2>
+      <p>Escrita con los errores más comunes. Los 4 ataques funcionan: bypass de login, robo de datos con UNION, XSS y contraseñas en texto plano.</p>
+      <div class="ir">Abrir versión insegura →</div>
+    </a>
+    <a class="opcion seg" href="seguro.html">
+      <span class="tag"><span class="pt"></span> Versión segura</span>
+      <h2>Con las medidas de la clase 05</h2>
+      <p>El mismo código, blindado: consultas parametrizadas, bcrypt, textContent y CSP. Los mismos ataques fallan.</p>
+      <div class="ir">Abrir versión segura →</div>
+    </a>
+  </div>
+
+  <div class="nota-inicio">
+    <b>Cómo usarlo:</b> abre las dos versiones en pestañas separadas y pruébalas lado a lado.
+    Todo corre en tu navegador con datos de prueba; si una página se ensucia tras un ataque, recárgala (F5).
+  </div>
+</main>
+
+<footer>
+  Tecnología de Internet II · ISW-312 · UCE — Laboratorio de seguridad web.
+</footer>
+
+<script>
+  document.getElementById('btn-modo').addEventListener('click', () =>
+    document.body.classList.toggle('modo-oscuro'));
+</script>
+</body>
+</html>
